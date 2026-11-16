@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Availability: {{ resource.name }} - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Availability: {{ resource.name }}</h1>
+
+    <form method="get">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="{{ day|date:'Y-m-d' }}">
+        <button type="submit">View</button>
+    </form>
+
+    <h2>Bookings on {{ day|date:"Y-m-d" }}</h2>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Start</th>
+            <th>End</th>
+            <th>Status</th>
+            <th>Booked by</th>
+        </tr>
+        {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.start_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ booking.end_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ booking.get_status_display }}</td>
+                <td>{{ booking.requester.username }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No bookings on this day. The resource is free all day.</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <p>
+        <a href="{% url 'booking_create' %}">Request this resource</a> |
+        <a href="{% url 'resource_list' %}">Back to resources</a>
+    </p>
+{% endblock %}

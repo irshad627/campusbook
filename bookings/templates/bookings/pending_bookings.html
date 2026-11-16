@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Pending requests - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Pending booking requests</h1>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Resource</th>
+            <th>Requested by</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Purpose</th>
+            <th>Attendees</th>
+            <th>Actions</th>
+        </tr>
+        {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.resource.name }}</td>
+                <td>{{ booking.requester.username }}</td>
+                <td>{{ booking.start_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ booking.end_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ booking.purpose }}</td>
+                <td>{{ booking.attendees }}</td>
+                <td>
+                    <form method="post" action="{% url 'booking_approve' booking.pk %}" style="display:inline">
+                        {% csrf_token %}
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form method="post" action="{% url 'booking_deny' booking.pk %}" style="display:inline">
+                        {% csrf_token %}
+                        <input type="text" name="reason" placeholder="Reason for denial">
+                        <button type="submit">Deny</button>
+                    </form>
+                    <form method="post" action="{% url 'booking_cancel' booking.pk %}" style="display:inline"
+                          onsubmit="return confirm('Cancel this booking?');">
+                        {% csrf_token %}
+                        <button type="submit">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">No pending requests.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}My bookings - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>My bookings</h1>
+
+    <p><a href="{% url 'booking_create' %}">+ Request a booking</a></p>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Resource</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Purpose</th>
+            <th>Attendees</th>
+            <th>Status</th>
+            <th>Reason (if denied)</th>
+            <th>Actions</th>
+        </tr>
+        {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.resource.name }}</td>
+                <td>{{ booking.start_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ booking.end_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ booking.purpose }}</td>
+                <td>{{ booking.attendees }}</td>
+                <td>{{ booking.get_status_display }}</td>
+                <td>{{ booking.denial_reason|default:"-" }}</td>
+                <td>
+                    {% if booking.status == "requested" or booking.status == "approved" %}
+                        <form method="post" action="{% url 'booking_cancel' booking.pk %}" style="display:inline"
+                            onsubmit="return confirm('Cancel this booking?');">
+                            {% csrf_token %}
+                            <button type="submit">Cancel</button>
+                        </form>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="8">You have no bookings yet.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

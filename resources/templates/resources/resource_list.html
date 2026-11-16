@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Resources - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Resources</h1>
+
+    {% if user.role == "admin" %}
+        <p><a href="{% url 'resource_create' %}">+ Add resource</a></p>
+    {% endif %}
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Availability</th>
+            {% if user.role == "staff" or user.role == "admin" %}<th>Set status</th>{% endif %}
+            {% if user.role == "admin" %}<th>Actions</th>{% endif %}
+        </tr>
+        {% for resource in resources %}
+            <tr>
+                <td><a href="{% url 'resource_detail' resource.pk %}">{{ resource.name }}</a></td>
+                <td>{{ resource.get_resource_type_display }}</td>
+                <td>{{ resource.location }}</td>
+                <td>{{ resource.capacity|default:"-" }}</td>
+                <td>{{ resource.get_status_display }}</td>
+                <td><a href="{% url 'availability' resource.pk %}">View</a></td>
+                {% if user.role == "staff" or user.role == "admin" %}
+                    <td>
+                        <form method="post" action="{% url 'resource_set_status' resource.pk %}">
+                            {% csrf_token %}
+                            <select name="status">
+                                <option value="available">Available</option>
+                                <option value="damaged">Damaged</option>
+                                <option value="unavailable">Unavailable</option>
+                            </select>
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                {% endif %}
+                {% if user.role == "admin" %}
+                    <td>
+                        <a href="{% url 'resource_update' resource.pk %}">Edit</a>
+                        <a href="{% url 'resource_delete' resource.pk %}">Delete</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="8">No resources yet.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

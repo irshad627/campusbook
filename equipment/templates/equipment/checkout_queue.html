@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Equipment check-out - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Equipment ready for check-out</h1>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Equipment</th>
+            <th>Borrower</th>
+            <th>Start</th>
+            <th>Due back</th>
+            <th>Action</th>
+        </tr>
+        {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.resource.name }}</td>
+                <td>{{ booking.requester.username }}</td>
+                <td>{{ booking.start_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ booking.end_time|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <form method="post" action="{% url 'checkout_issue' booking.pk %}">
+                        {% csrf_token %}
+                        <button type="submit">Check out</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">No approved equipment bookings waiting for check-out.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

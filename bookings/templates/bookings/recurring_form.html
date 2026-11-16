@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Recurring booking - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Request a recurring booking</h1>
+    <p>Enter the first session's start and end time, then how many weeks to repeat it.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit recurring request</button>
+        <a href="{% url 'my_bookings' %}">Cancel</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Notifications</h1>
+
+    <form method="post" action="{% url 'mark_all_read' %}">
+        {% csrf_token %}
+        <button type="submit">Mark all as read</button>
+    </form>
+
+    <ul>
+        {% for n in notifications %}
+            <li>
+                {% if not n.is_read %}<strong>(new)</strong>{% endif %}
+                {{ n.message }}
+                <small>{{ n.created_at|date:"Y-m-d H:i" }}</small>
+            </li>
+        {% empty %}
+            <li>No notifications yet.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Checked-out equipment - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Equipment currently checked out</h1>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Equipment</th>
+            <th>Borrower</th>
+            <th>Checked out</th>
+            <th>Due back</th>
+            <th>Status</th>
+            <th>Check in</th>
+        </tr>
+        {% for c in checkouts %}
+            <tr>
+                <td>{{ c.booking.resource.name }}</td>
+                <td>{{ c.booking.requester.username }}</td>
+                <td>{{ c.checked_out_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ c.booking.end_time|date:"Y-m-d H:i" }}</td>
+                <td>
+                    {% if c.is_overdue %}
+                        <strong>OVERDUE</strong>
+                    {% else %}
+                        On loan
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'checkout_return' c.pk %}">
+                        {% csrf_token %}
+                        <select name="condition">
+                            <option value="good">Good</option>
+                            <option value="damaged">Damaged</option>
+                        </select>
+                        <input type="text" name="notes" placeholder="Notes (optional)">
+                        <button type="submit">Check in</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">Nothing is currently checked out.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

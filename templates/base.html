@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}CampusBook{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="{% url 'resource_list' %}">Resources</a>
+        <a href="{% url 'booking_create' %}">Request booking</a>
+        <a href="{% url 'my_bookings' %}">My bookings</a>
+        {% if user.role == "staff" or user.role == "admin" %}
+            <a href="{% url 'pending_bookings' %}">Pending requests</a>
+            <a href="{% url 'checkout_queue' %}">Equipment check-out</a>
+            <a href="{% url 'checked_out_list' %}">Checked-out items</a>
+            <a href="{% url 'staff_overview' %}">Staff overview</a>
+        {% endif %}
+        {% if user.role == "lecturer" or user.role == "admin" %}
+            <a href="{% url 'my_booking_summary' %}">My summary</a>
+            <a href="{% url 'recurring_create' %}">Recurring booking</a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <span>{{ user.username }} ({{ user.get_role_display }})</span>
+            <a href="{% url 'notification_list' %}">Notifications ({{ unread_count }})</a>
+            {% if user.role == "admin" %}
+                <a href="/admin/">Admin site</a>
+                <a href="{% url 'booking_summary' %}">Booking report</a>
+                <a href="{% url 'resource_utilization' %}">Utilization report</a>
+            {% endif %}
+            <form method="post" action="{% url 'logout' %}" style="display:inline">
+                {% csrf_token %}
+                <button type="submit">Log out</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Log in</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <main>
+    {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

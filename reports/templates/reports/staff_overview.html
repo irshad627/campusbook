@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Staff overview - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Staff overview</h1>
+
+    <p>Pending requests: <strong>{{ pending_count }}</strong>
+        (<a href="{% url 'pending_bookings' %}">review</a>)</p>
+    <p>Items currently checked out: <strong>{{ out_count }}</strong>
+        (<a href="{% url 'checked_out_list' %}">view all</a>)</p>
+
+    <h2>Overdue equipment</h2>
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Equipment</th>
+            <th>Borrower</th>
+            <th>Was due</th>
+        </tr>
+        {% for c in overdue %}
+            <tr>
+                <td>{{ c.booking.resource.name }}</td>
+                <td>{{ c.booking.requester.username }}</td>
+                <td>{{ c.booking.end_time|date:"Y-m-d H:i" }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3">Nothing is overdue.</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Damaged resources</h2>
+    <ul>
+        {% for r in damaged %}
+            <li>{{ r.name }} ({{ r.location }})</li>
+        {% empty %}
+            <li>No damaged resources.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

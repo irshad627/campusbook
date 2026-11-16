@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ resource.name }} - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>{{ resource.name }}</h1>
+
+    <p><strong>Type:</strong> {{ resource.get_resource_type_display }}</p>
+    <p><strong>Location:</strong> {{ resource.location }}</p>
+    <p><strong>Capacity:</strong> {{ resource.capacity|default:"-" }}</p>
+    <p><strong>Features:</strong> {{ resource.features|default:"None listed" }}</p>
+
+    <p><a href="{% url 'resource_list' %}">Back to resources</a></p>
+{% endblock %}

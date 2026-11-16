@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Resource utilization - CampusBook{% endblock %}
+
+{% block content %}
+    <h1>Resource utilization report</h1>
+
+    <form method="get">
+        <label for="start">From:</label>
+        <input type="date" id="start" name="start" value="{{ start|date:'Y-m-d' }}">
+        <label for="end">To:</label>
+        <input type="date" id="end" name="end" value="{{ end|date:'Y-m-d' }}">
+        <button type="submit">Run report</button>
+    </form>
+
+    <h2>{{ start|date:"Y-m-d" }} to {{ end|date:"Y-m-d" }}</h2>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Resource</th>
+            <th>Type</th>
+            <th>Approved/completed bookings</th>
+        </tr>
+        {% for resource in resources %}
+            <tr>
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.get_resource_type_display }}</td>
+                <td>{{ resource.approved_count }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3">No resources yet.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
