@@ -13,6 +13,7 @@
         <a href="{% url 'resource_list' %}">Resources</a>
         <a href="{% url 'booking_create' %}">Request booking</a>
         <a href="{% url 'my_bookings' %}">My bookings</a>
+        <a href="{% url 'my_booking_summary' %}">My summary</a>
         {% if user.role == "staff" or user.role == "admin" %}
             <a href="{% url 'pending_bookings' %}">Pending requests</a>
             <a href="{% url 'checkout_queue' %}">Equipment check-out</a>
@@ -20,7 +21,6 @@
             <a href="{% url 'staff_overview' %}">Staff overview</a>
         {% endif %}
         {% if user.role == "lecturer" or user.role == "admin" %}
-            <a href="{% url 'my_booking_summary' %}">My summary</a>
             <a href="{% url 'recurring_create' %}">Recurring booking</a>
         {% endif %}
         {% if user.is_authenticated %}

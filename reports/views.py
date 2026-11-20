@@ -93,7 +93,7 @@ def staff_overview(request):
         },
     )
 
-@role_required("lecturer", "admin")
+@role_required("lecturer", "admin", "student", "staff")
 def my_booking_summary(request):
     bookings = Booking.objects.filter(requester=request.user)
     counts = {
