@@ -4,7 +4,7 @@ from django.db.models import Count, Q
 from django.shortcuts import render
 from django.utils import timezone
 
-from accounts.decorators import role_required
+from accounts.decorators import role_required, login_required
 from bookings.models import Booking
 from resources.models import Resource
 from equipment.models import EquipmentCheckout
@@ -93,7 +93,7 @@ def staff_overview(request):
         },
     )
 
-@role_required("lecturer", "admin", "student", "staff")
+@login_required
 def my_booking_summary(request):
     bookings = Booking.objects.filter(requester=request.user)
     counts = {

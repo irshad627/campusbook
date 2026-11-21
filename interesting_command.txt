@@ -1,2 +1,0 @@
-psql -U postgres --> lets you use postgres in the command line
-psql -U postgres -d campusbook -c "\dt" --> lists the tables
